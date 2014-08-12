@@ -4,6 +4,7 @@ using System.Resources;
 using System.Windows;
 using System.Windows.Markup;
 using System.Windows.Navigation;
+using GalaSoft.MvvmLight.Threading;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using Wp8MapExtensions.Resources;
@@ -55,6 +56,7 @@ namespace Wp8MapExtensions
                 PhoneApplicationService.Current.UserIdleDetectionMode = IdleDetectionMode.Disabled;
             }
 
+            DispatcherHelper.Initialize();
         }
 
         // Code to execute when the application is launching (eg, from Start)

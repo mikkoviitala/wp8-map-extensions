@@ -93,6 +93,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Message\RefreshPlanesMessage.cs" />
     <Compile Include="Model\IPlane.cs" />
     <Compile Include="Model\Plane.cs" />
     <Compile Include="Repository\IPlaneRepository.cs" />

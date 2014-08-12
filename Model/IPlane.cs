@@ -5,6 +5,6 @@ namespace Wp8MapExtensions.Model
     public interface IPlane
     {
         GeoCoordinate Location { get; set; }
-        int Bearing { get; set; }
+        double Bearing { get; set; }
     }
 }

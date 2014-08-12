@@ -4,16 +4,16 @@ using System.Runtime.CompilerServices;
 
 namespace Wp8MapExtensions.Model
 {
-    public class RealTimePlane : IPlane, INotifyPropertyChanged
+    public class Plane : IPlane, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
         private GeoCoordinate _location;
-        private int _bearing;
+        private double _bearing;
 
-        public RealTimePlane()
+        public Plane()
         {}
 
-        public RealTimePlane(GeoCoordinate location, int bearing)
+        public Plane(GeoCoordinate location, double bearing)
         {
             Location = location;
             Bearing = bearing;
@@ -25,7 +25,7 @@ namespace Wp8MapExtensions.Model
             set { _location = value; OnPropertyChanged(); }
         }
 
-        public int Bearing
+        public double Bearing
         {
             get { return _bearing; }
             set { _bearing = value; OnPropertyChanged();}

@@ -1,50 +1,68 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using GalaSoft.MvvmLight.Messaging;
+using GalaSoft.MvvmLight.Threading;
 using Microsoft.Phone.Controls;
+using Microsoft.Phone.Maps.Controls;
 using Microsoft.Phone.Maps.Toolkit;
+using Wp8MapExtensions.Message;
 using Wp8MapExtensions.Model;
 
 namespace Wp8MapExtensions.View
 {
     public partial class MainPage : PhoneApplicationPage
     {
-        private const string ActiveButtonContent = "Refresh";
-        private const string InactiveButtonContent = "Hold on...";
+        private readonly MapLayer _pushpinLayer;
 
         public MainPage()
         {
             InitializeComponent();
 
-            Messenger.Default.Register<PropertyChangedMessage<IEnumerable<IPlane>>>(this, message =>
-                {
-                    ToggleControls(false);
-                    Deployment.Current.Dispatcher.BeginInvoke(() =>
+            _pushpinLayer = new MapLayer();
+            MyMap.Layers.Add(_pushpinLayer);
+
+            Messenger.Default.Register<RefreshPlanesMessage>(this, message =>
+                Task.Factory.StartNew(() => 
+                    {
+                        DispatcherHelper.CheckBeginInvokeOnUI(() => _pushpinLayer.Clear());
+                        if (message.Delay != null)
                         {
-                            RefreshButton.Content = InactiveButtonContent;
-
-                            // Workaround: Annoying MapExtension ItemsSource implementation
-                            var itemCollection =
-                                MapExtensions.GetChildren(MyMap).OfType<MapItemsControl>().FirstOrDefault();
-                            if (itemCollection == null)
-                                return;
-
-                            if (itemCollection.Items.Any())
-                                itemCollection.Items.Clear();
-
-                            foreach (var item in message.NewValue)
-                                itemCollection.Items.Add(item);
-
-                            ToggleControls(true);
-                        });
-                });
+                            foreach (var plane in message.Planes)
+                            {
+                                AddPins(new[] {plane});
+                                Thread.Sleep(message.Delay.Value);
+                            }
+                        }
+                        else
+                        {
+                            AddPins(message.Planes);
+                        }
+                    }));
         }
 
-        private void ToggleControls(bool isEnabled)
+        private void AddPins(IEnumerable<IPlane> planes)
         {
-            RefreshButton.IsEnabled = isEnabled;
-            RefreshButton.Content = isEnabled ? ActiveButtonContent : InactiveButtonContent;
+            DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                {
+                    foreach (var plane in planes)
+                    {
+                        var pushpin = new Pushpin
+                            {
+                                GeoCoordinate = plane.Location, 
+                                Style = Resources["PushpinStyle"] as Style
+                            };
+
+                        //create MapOverlay with pushpin as content
+                        var pushpinOverlay = new MapOverlay
+                            {
+                                GeoCoordinate = plane.Location,
+                                Content = pushpin
+                            };
+                        _pushpinLayer.Add(pushpinOverlay);
+                    }
+                });
         }
     }
 }

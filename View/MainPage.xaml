@@ -22,41 +22,53 @@
         <vm:MainViewModel />
     </phone:PhoneApplicationPage.DataContext>
     
+    <phone:PhoneApplicationPage.Resources>
+        <Style x:Key="PushpinStyle" TargetType="maptk:Pushpin">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="maptk:Pushpin">
+                        <Ellipse Fill="GreenYellow" Stroke="Black" HorizontalAlignment="Center" VerticalAlignment="Center" Width="15" Height="15" StrokeThickness="2" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="PositionOrigin" Value="0.5,1.0"/>
+        </Style>
+    </phone:PhoneApplicationPage.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
 
-        <maps:Map x:Name="MyMap" Grid.Row="0">
-            <maptk:MapExtensions.Children>
-                <maptk:MapItemsControl>
-                    <maptk:MapItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <maptk:Pushpin GeoCoordinate="{Binding Location}" PositionOrigin="0.5,0.5">
-                                <maptk:Pushpin.Template>
-                                    <ControlTemplate TargetType="maptk:Pushpin">
-                                        <Grid Width="45" Height="45" Background="Transparent">
-                                            <Polygon Fill="DarkGreen" Points="22,0 34,13, 12,13" Width="45" Height="45" RenderTransformOrigin="0.5,0.5">
-                                                <Polygon.RenderTransform>
-                                                    <RotateTransform CenterX="0.5" CenterY="0.5" Angle="{Binding Bearing}"/>
-                                                </Polygon.RenderTransform>
-                                            </Polygon>
-                                            <Ellipse Fill="GreenYellow" Stroke="Black" HorizontalAlignment="Center" VerticalAlignment="Center" Width="15" Height="15" StrokeThickness="2" />
-                                        </Grid>
-                                    </ControlTemplate>
-                                </maptk:Pushpin.Template>
-                            </maptk:Pushpin>
-                        </DataTemplate>
-                    </maptk:MapItemsControl.ItemTemplate>
-                </maptk:MapItemsControl>
-            </maptk:MapExtensions.Children>
-        </maps:Map>
+        <maps:Map x:Name="MyMap" Grid.Row="0" Grid.ColumnSpan="2" />
 
-        <Button Grid.Row="1" Content="Refresh" Name="RefreshButton">
+        <Button Grid.Row="1" 
+                Grid.Column="0" 
+                Content="Instant refresh" 
+                Name="InstantRefreshButton"
+                IsEnabled="{Binding UIEnabled}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="Click">
-                    <cmd:EventToCommand Command="{Binding Mode=OneWay, Path=RefreshPlanesCommand}" />
+                    <cmd:EventToCommand 
+                        Command="{Binding Mode=OneWay, Path=InstantRefreshCommand}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </Button>
+
+        <Button Grid.Row="1" 
+                Grid.Column="1" 
+                Content="Delayed refresh" 
+                Name="DelayedRefreshButton"
+                IsEnabled="{Binding UIEnabled}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="Click">
+                    <cmd:EventToCommand 
+                        Command="{Binding Mode=OneWay, Path=DelayedRefreshCommand}" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </Button>

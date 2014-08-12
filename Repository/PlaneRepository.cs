@@ -19,15 +19,14 @@ namespace Wp8MapExtensions.Repository
         public Task<IEnumerable<IPlane>> GetAllPlanesAsync()
         {
             return Task.Factory.StartNew(() =>
-            {
-                var planes = new List<IPlane>();
+                {
+                    var planes = new List<IPlane>();
 
-                for (int i = 0; i < Count; i++)
-                    planes.Add(new RealTimePlane(GetLocation(X, Y, Radius), _random.Next(BearingMin, BearingMax)));
+                    for (int i = 0; i < Count; i++)
+                        planes.Add(new Plane(GetLocation(X, Y, Radius), Convert.ToDouble(_random.Next(BearingMin, BearingMax))));
 
-                return planes as IEnumerable<IPlane>;
-            });
-
+                    return planes as IEnumerable<IPlane>;
+                });
         }
 
         // Taken from http://gis.stackexchange.com/questions/25877/how-to-generate-random-locations-nearby-my-location
