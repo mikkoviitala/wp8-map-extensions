@@ -6,48 +6,22 @@ using GalaSoft.MvvmLight.Messaging;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Maps.Toolkit;
 using Wp8MapExtensions.Model;
+using Wp8MapExtensions.ViewModel;
 
 namespace Wp8MapExtensions.View
 {
     public partial class MainPage : PhoneApplicationPage
     {
-        private const string ActiveButtonContent = "Refresh";
-        private const string InactiveButtonContent = "Hold on...";
+        private readonly MainViewModel _mainViewModel = new MainViewModel();
 
         public MainPage()
         {
             InitializeComponent();
-
-            Messenger.Default.Register<PropertyChangedMessage<IEnumerable<IPlane>>>(this, message =>
-                {
-                    Deployment.Current.Dispatcher.BeginInvoke(() => ToggleControls(false));
-                    Task.Factory.StartNew(() =>
-                        {
-                            Deployment.Current.Dispatcher.BeginInvoke(() =>
-                            {
-                                // Workaround the annoying MapExtension ItemsSource implementation
-                                var itemCollection =
-                                    MapExtensions.GetChildren(MyMap).OfType<MapItemsControl>().FirstOrDefault();
-                                if (itemCollection == null)
-                                    return;
-
-                                if (itemCollection.Items.Any())
-                                    itemCollection.Items.Clear();
-
-                                foreach (var item in message.NewValue)
-                                    itemCollection.Items.Add(item);
-
-                                ToggleControls(true);
-                            });
-                        });
-                    
-                });
-        }
-
-        private void ToggleControls(bool isEnabled)
-        {
-            RefreshButton.IsEnabled = isEnabled;
-            RefreshButton.Content = isEnabled ? ActiveButtonContent : InactiveButtonContent;
+            DataContext = _mainViewModel;
+            
+            var control = MapExtensions.GetChildren(MyMap).OfType<MapItemsControl>().FirstOrDefault();
+            if (control != null) 
+                control.ItemsSource = _mainViewModel.Planes;
         }
     }
 }

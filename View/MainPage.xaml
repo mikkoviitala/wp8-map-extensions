@@ -8,7 +8,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:maps="clr-namespace:Microsoft.Phone.Maps.Controls;assembly=Microsoft.Phone.Maps"
     xmlns:maptk="clr-namespace:Microsoft.Phone.Maps.Toolkit;assembly=Microsoft.Phone.Controls.Toolkit"
-    xmlns:vm="clr-namespace:Wp8MapExtensions.ViewModel"
     xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
     xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras"
     mc:Ignorable="d"
@@ -17,10 +16,6 @@
     Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait" Orientation="Portrait"
     shell:SystemTray.IsVisible="True">
-
-    <phone:PhoneApplicationPage.DataContext>
-        <vm:MainViewModel />
-    </phone:PhoneApplicationPage.DataContext>
     
     <Grid>
         <Grid.RowDefinitions>
@@ -30,7 +25,7 @@
 
         <maps:Map x:Name="MyMap" Grid.Row="0">
             <maptk:MapExtensions.Children>
-                <maptk:MapItemsControl>
+                <maptk:MapItemsControl ItemsSource="{Binding Planes}">
                     <maptk:MapItemsControl.ItemTemplate>
                         <DataTemplate>
                             <maptk:Pushpin GeoCoordinate="{Binding Location}" PositionOrigin="0.5,0.5">
