@@ -21,6 +21,7 @@ namespace Wp8MapExtensions.ViewModel
             RefreshPlanesCommand = new RelayCommand(async () =>
                 {
                     var planes = (await PlaneRepository.GetAllPlanesAsync()).ToList();
+
                     if (Planes.Any())
                         Planes.Clear();
 

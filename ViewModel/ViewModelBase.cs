@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
 
 namespace Wp8MapExtensions.ViewModel
 {
@@ -7,7 +6,7 @@ namespace Wp8MapExtensions.ViewModel
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected virtual void NotifyPropertyChanged([CallerMemberName] string propertyName = null)
+        protected virtual void NotifyPropertyChanged(string propertyName = null)
         {
             var handler = PropertyChanged;
             if (handler != null) 
