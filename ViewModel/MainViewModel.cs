@@ -28,11 +28,9 @@ namespace Wp8MapExtensions.ViewModel
 
         private async void SendMessage(int? delay = null)
         {
-            Planes = (await PlaneRepository.GetAllPlanesAsync()).ToList();
-            Messenger.Default.Send(new RefreshPlanesMessage(Planes, delay));
+            var planes = (await PlaneRepository.GetAllPlanesAsync()).ToList();
+            Messenger.Default.Send(new RefreshPlanesMessage(planes, delay));
         }
-
-        public IEnumerable<IPlane> Planes { get; set; } 
 
         public IPlaneRepository PlaneRepository { get; set; }
 
