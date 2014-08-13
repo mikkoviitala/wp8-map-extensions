@@ -1,11 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
-using GalaSoft.MvvmLight.Messaging;
+﻿using System.Linq;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Maps.Toolkit;
-using Wp8MapExtensions.Model;
 using Wp8MapExtensions.ViewModel;
 
 namespace Wp8MapExtensions.View
