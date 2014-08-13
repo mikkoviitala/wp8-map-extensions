@@ -24,22 +24,32 @@ namespace Wp8MapExtensions.View
             MyMap.Layers.Add(_pushpinLayer);
 
             Messenger.Default.Register<RefreshPlanesMessage>(this, message =>
-                Task.Factory.StartNew(() => 
-                    {
-                        DispatcherHelper.CheckBeginInvokeOnUI(() => _pushpinLayer.Clear());
-                        if (message.Delay != null)
+                {
+                    DispatcherHelper.CheckBeginInvokeOnUI(() =>
                         {
-                            foreach (var plane in message.Planes)
+                            UIEnabled(false);
+                            _pushpinLayer.Clear();
+                        });
+
+                    Task.Factory.StartNew(() =>
+                        {
+
+                            if (message.Delay != null)
                             {
-                                AddPins(new[] {plane});
-                                Thread.Sleep(message.Delay.Value);
+                                foreach (var plane in message.Planes)
+                                {
+                                    AddPins(new[] {plane});
+                                    Thread.Sleep(message.Delay.Value);
+                                }
                             }
-                        }
-                        else
-                        {
-                            AddPins(message.Planes);
-                        }
-                    }));
+                            else
+                            {
+                                AddPins(message.Planes);
+                            }
+
+                            DispatcherHelper.CheckBeginInvokeOnUI(() => UIEnabled(true));
+                        });
+                });
         }
 
         private void AddPins(IEnumerable<IPlane> planes)
@@ -51,10 +61,9 @@ namespace Wp8MapExtensions.View
                         var pushpin = new Pushpin
                             {
                                 GeoCoordinate = plane.Location, 
-                                Style = Resources["PushpinStyle"] as Style
+                                Style = Resources["PlaneStyle"] as Style
                             };
 
-                        //create MapOverlay with pushpin as content
                         var pushpinOverlay = new MapOverlay
                             {
                                 GeoCoordinate = plane.Location,
@@ -63,6 +72,11 @@ namespace Wp8MapExtensions.View
                         _pushpinLayer.Add(pushpinOverlay);
                     }
                 });
+        }
+
+        private void UIEnabled(bool isEnabled)
+        {
+            InstantRefreshButton.IsEnabled = DelayedRefreshButton.IsEnabled = isEnabled;
         }
     }
 }

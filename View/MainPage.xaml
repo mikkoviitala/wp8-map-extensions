@@ -23,7 +23,7 @@
     </phone:PhoneApplicationPage.DataContext>
     
     <phone:PhoneApplicationPage.Resources>
-        <Style x:Key="PushpinStyle" TargetType="maptk:Pushpin">
+        <Style x:Key="PlaneStyle" TargetType="maptk:Pushpin">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="maptk:Pushpin">
@@ -50,8 +50,7 @@
         <Button Grid.Row="1" 
                 Grid.Column="0" 
                 Content="Instant refresh" 
-                Name="InstantRefreshButton"
-                IsEnabled="{Binding UIEnabled}">
+                Name="InstantRefreshButton">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="Click">
                     <cmd:EventToCommand 
@@ -63,8 +62,7 @@
         <Button Grid.Row="1" 
                 Grid.Column="1" 
                 Content="Delayed refresh" 
-                Name="DelayedRefreshButton"
-                IsEnabled="{Binding UIEnabled}">
+                Name="DelayedRefreshButton">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="Click">
                     <cmd:EventToCommand 
