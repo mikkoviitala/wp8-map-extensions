@@ -1,4 +1,3 @@
-wp8-map-extensions
-==================
-
 Testing WP toolkit MapExtension.
+
+Conclusion: It sucks donkey's arse.
