@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using GalaSoft.MvvmLight.Messaging;
 using Microsoft.Phone.Controls;
@@ -19,25 +20,27 @@ namespace Wp8MapExtensions.View
 
             Messenger.Default.Register<PropertyChangedMessage<IEnumerable<IPlane>>>(this, message =>
                 {
-                    ToggleControls(false);
-                    Deployment.Current.Dispatcher.BeginInvoke(() =>
+                    Deployment.Current.Dispatcher.BeginInvoke(() => ToggleControls(false));
+                    Task.Factory.StartNew(() =>
                         {
-                            RefreshButton.Content = InactiveButtonContent;
+                            Deployment.Current.Dispatcher.BeginInvoke(() =>
+                            {
+                                // Workaround the annoying MapExtension ItemsSource implementation
+                                var itemCollection =
+                                    MapExtensions.GetChildren(MyMap).OfType<MapItemsControl>().FirstOrDefault();
+                                if (itemCollection == null)
+                                    return;
 
-                            // Workaround: Annoying MapExtension ItemsSource implementation
-                            var itemCollection =
-                                MapExtensions.GetChildren(MyMap).OfType<MapItemsControl>().FirstOrDefault();
-                            if (itemCollection == null)
-                                return;
+                                if (itemCollection.Items.Any())
+                                    itemCollection.Items.Clear();
 
-                            if (itemCollection.Items.Any())
-                                itemCollection.Items.Clear();
+                                foreach (var item in message.NewValue)
+                                    itemCollection.Items.Add(item);
 
-                            foreach (var item in message.NewValue)
-                                itemCollection.Items.Add(item);
-
-                            ToggleControls(true);
+                                ToggleControls(true);
+                            });
                         });
+                    
                 });
         }
 
