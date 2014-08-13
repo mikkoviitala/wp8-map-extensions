@@ -33,7 +33,6 @@ namespace Wp8MapExtensions.View
 
                     Task.Factory.StartNew(() =>
                         {
-
                             if (message.Delay != null)
                             {
                                 foreach (var plane in message.Planes)
