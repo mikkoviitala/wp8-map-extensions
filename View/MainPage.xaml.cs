@@ -59,7 +59,6 @@ namespace Wp8MapExtensions.View
                     {
                         var pushpin = new Pushpin
                             {
-                                GeoCoordinate = plane.Location, 
                                 Style = Resources["PlaneStyle"] as Style
                             };
 
